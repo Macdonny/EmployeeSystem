@@ -59,5 +59,4 @@ class EmployeeSchema(BaseEmployeeSchema):
     years_of_experience = fields.Integer()
 
 class ManagementSchema(BaseEmployeeSchema):
-    type = fields.Str()
     reception_hours = fields.Number()
