@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from flask import Flask, jsonify, request
 from sqlalchemy import func
 from .entities.entity import Session, engine, Base
@@ -5,6 +6,7 @@ from .entities.employee import BaseEmployee, Employee, Management, BaseEmployeeS
 import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 Base.metadata.create_all(engine)
 
