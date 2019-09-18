@@ -1,7 +1,6 @@
+from marshmallow import Schema, fields
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
-
 from sqlalchemy.orm import relationship
-
 from .entity import Base
 
 
@@ -38,7 +37,7 @@ class Employee(BaseEmployee):
         self.years_of_experience = years_of_experience
 
 class Management(BaseEmployee):
-    reception_hours = Column(Float(precision=1,asdecimal=True))
+    reception_hours = Column(Float(asdecimal=True))
 
     __mapper_args__ = {
         'polymorphic_identity':'management'
@@ -47,3 +46,18 @@ class Management(BaseEmployee):
     def __init__(self, company, name, salary, type, reception_hours):
         super().__init__(company, name, salary, type)
         self.reception_hours = reception_hours
+
+class BaseEmployeeSchema(Schema):
+    id = fields.Number()
+    company = fields.Str()
+    name = fields.Str()
+    salary = fields.Number()
+    type = fields.Str()
+
+class EmployeeSchema(BaseEmployeeSchema):
+    lunchtime = fields.Str()
+    years_of_experience = fields.Integer()
+
+class ManagementSchema(BaseEmployeeSchema):
+    type = fields.Str()
+    reception_hours = fields.Number()

@@ -1,32 +1,28 @@
+from flask import Flask, jsonify, request
 from .entities.entity import Session, engine, Base
-from .entities.employee import BaseEmployee, Employee, Management
+from .entities.employee import BaseEmployee, Employee, Management, BaseEmployeeSchema, EmployeeSchema, ManagementSchema
 import datetime
 
-# generate database schema
+app = Flask(__name__)
+
 Base.metadata.create_all(engine)
 
-# start session
-session = Session()
 
-# check for existing data
-employees = session.query(BaseEmployee).all()
+@app.route('/getAllEmployees')
+def get_all_employees():
+    # fetching from the database
+    session = Session()
+    employee_objects = session.query(Employee).all()
+    management_object = session.query(Management).all()
 
-if len(employees) == 0:
-    # create and persist dummy employees
-    now = datetime.datetime.now()
-    lunch = str(now.hour) + ":" + str(now.minute)
-    employee = Employee("company 1", "Sample", 80000, "employee", lunch, 2)
-    employee2 = Management("company 1", "ManagementSample", 80000, "management", 4)
+    # transforming into JSON-serializable objects
+    employee_schema = EmployeeSchema(many=True)
+    management_schema = ManagementSchema(many=True)
 
-    session.add(employee)
-    session.add(employee2)
-    session.commit()
+    employees = employee_schema.dump(employee_objects)
+    management = management_schema.dump(management_object)
+    all_employees = employees + management
+
+    # serializing as JSON
     session.close()
-
-    # reload companies
-    employees = session.query(BaseEmployee).all()
-
-# show existing exams
-print("### Employees:")
-for employee in employees:
-    print(f'{employee.id} {employee.name} {employee.salary} {employee.type} {employee.company}')
+    return jsonify(all_employees)
