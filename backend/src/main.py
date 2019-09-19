@@ -36,7 +36,7 @@ def get_all_employees():
 def add_employee():
 
     request_obj = request.get_json()
-    if request_obj["type"] == "employee":
+    if request_obj["type"].lower() == "employee":
         posted_employee = EmployeeSchema(only=('company', 'name', 'salary', 'type', 'lunchtime', 'years_of_experience')).load(request_obj)
         employee = Employee(**posted_employee)
 
@@ -49,7 +49,7 @@ def add_employee():
         new_employee = EmployeeSchema().dump(employee)
         session.close()
         return jsonify(new_employee), 201
-    elif request_obj["type"] == "management":
+    elif request_obj["type"].lower() == "management":
         posted_employee = ManagementSchema(only=('company', 'name', 'salary', 'type', 'reception_hours')).load(request_obj)
         employee = Management(**posted_employee)
 
@@ -59,7 +59,7 @@ def add_employee():
         session.commit()
 
         # return created employee
-        new_employee = EmployeeSchema().dump(employee)
+        new_employee = ManagementSchema().dump(employee)
         session.close()
         return jsonify(new_employee), 201
 
@@ -68,7 +68,7 @@ def add_employee():
 def edit_employee():
 
     request_obj = request.get_json()
-    if request_obj["type"] == "employee":
+    if request_obj["type"].lower() == "employee":
         employee = EmployeeSchema(only=('id', 'company', 'name', 'salary', 'type', 'lunchtime', 'years_of_experience')).load(request_obj)
         # persist employee
         session = Session()
@@ -79,7 +79,7 @@ def edit_employee():
         new_employee = EmployeeSchema().dump(employee)
         session.close()
         return jsonify(new_employee), 200
-    elif request_obj["type"] == "management":
+    elif request_obj["type"].lower() == "management":
         employee = ManagementSchema(only=('id', 'company', 'name', 'salary', 'type', 'reception_hours')).load(request_obj)
 
         # persist employee
@@ -88,7 +88,7 @@ def edit_employee():
         session.commit()
 
         # return created employee
-        new_employee = EmployeeSchema().dump(employee)
+        new_employee = ManagementSchema().dump(employee)
         session.close()
         return jsonify(new_employee), 200
 

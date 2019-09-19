@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col">
+    <div class="text-center">
+      <h1>Employees</h1>
+    </div>
+    <div class="clearfix" style="padding-bottom: 10px;">
+      <button type="button" (click)="showCreateEmployeDialog()" class="btn btn-primary btn-sm float-right"><i class="fa fa-plus"></i> Add Employee</button>
+    </div>
+  </div>
+</div>
+<p-table [columns]="cols" [value]="employeesList" selectionMode="single" [(selection)]="selectedEmployee" sortField="name" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-employee let-columns="columns">
+      <tr [pSelectableRow]="employee">
+          <td *ngFor="let col of columns">
+                  {{employee[col.field]}}
+          </td>
+      </tr>
+    </ng-template>
+</p-table>
+<p-dialog header="Create New Employee" [(visible)]="displayCreateEmployee">
+  <form [formGroup]="newEmployeeForm" (ngSubmit)="onSave()">
+    <div class="form-group">
+      <label for="inputTypeEmployee">Type of Employee</label>
+      <select id="inputTypeEmployee" class="form-control" formControlName="type" (change)="changeEmployee($event)" required>
+        <option *ngFor="let option of employeeOptions">{{option}}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputName">Name</label>
+        <input type="text" class="form-control" id="inputName" placeholder="Name" formControlName="name" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputCompany">Company</label>
+        <input type="text" class="form-control" id="inputCompany" placeholder="Company" formControlName="company" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputSalary">Salary</label>
+        <input type="number" class="form-control" id="inputSalary" placeholder="Salary" min="0" formControlName="salary" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLunchTime">Lunch Time</label>
+        <input type="text" class="form-control" id="inputLunchTime" placeholder="12:00" formControlName="lunchtime" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputYearsOfExperience">Years of Experience</label>
+        <input type="number" class="form-control" id="inputYearsOfExperience" placeholder="0" min="0" formControlName="years_of_experience" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputReceptionHours">Reception Hours</label>
+        <input type="number" class="form-control" id="inputReceptionHours" placeholder="0" min="0" formControlName="reception_hours" required>
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <button class="btn btn-primary float-right" type="submit" [disabled]="!newEmployeeForm.valid">Save</button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog header="Edit Employee" [(visible)]="displayEditEmployee">
+  <form [formGroup]="editEmployeeForm" (ngSubmit)="onEdit()">
+    <div class="form-group">
+      <label for="inputTypeEmployee">Type of Employee</label>
+      <select id="inputTypeEmployee" class="form-control" formControlName="type" (change)="editChangeEmployee($event)" required>
+        <option *ngFor="let option of employeeOptions">{{option}}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputName">Name</label>
+        <input type="text" class="form-control" id="inputName" placeholder="Name" formControlName="name" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputCompany">Company</label>
+        <input type="text" class="form-control" id="inputCompany" placeholder="Company" formControlName="company" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputSalary">Salary</label>
+        <input type="number" class="form-control" id="inputSalary" placeholder="Salary" min="0" formControlName="salary" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputLunchTime">Lunch Time</label>
+        <input type="text" class="form-control" id="inputLunchTime" placeholder="12:00" formControlName="lunchtime" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputYearsOfExperience">Years of Experience</label>
+        <input type="number" class="form-control" id="inputYearsOfExperience" placeholder="0" min="0" formControlName="years_of_experience" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputReceptionHours">Reception Hours</label>
+        <input type="number" class="form-control" id="inputReceptionHours" placeholder="0" min="0" formControlName="reception_hours" required>
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <button class="btn btn-primary float-right" type="submit" [disabled]="!editEmployeeForm.valid || editEmployeeForm.pristine">Edit</button>
+    </div>
+  </form>
+</p-dialog>
